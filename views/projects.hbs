@@ -1,0 +1,28 @@
+<h1 class="mb-4">My Projects</h1>
+
+<!-- Add Project Form -->
+<div class="card mb-4">
+  <div class="card-body">
+    <form action="/projects/add" method="POST">
+      <div class="mb-3">
+        <label class="form-label">Project Title</label>
+        <input type="text" name="title" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Add Project</button>
+    </form>
+  </div>
+</div>
+
+<!-- Project List -->
+<div class="list-group">
+  {{#each projects}}
+    <a href="/projects/{{this.id}}" class="list-group-item list-group-item-action">
+      <h5>{{title}}</h5>
+      <p>{{this.description}}</p>
+    </a>
+  {{/each}}
+</div>
