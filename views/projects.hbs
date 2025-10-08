@@ -1,28 +1,41 @@
-<h1 class="mb-4">My Projects</h1>
+<div class="container mt-4">
+  <h1 class="mb-4 text-center text-primary">My Projects</h1>
 
-<!-- Add Project Form -->
-<div class="card mb-4">
-  <div class="card-body">
-    <form action="/projects/add" method="POST">
-      <div class="mb-3">
-        <label class="form-label">Project Title</label>
-        <input type="text" name="title" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea name="description" class="form-control" rows="3" required></textarea>
-      </div>
-      <button type="submit" class="btn btn-success">Add Project</button>
-    </form>
+  <!-- Add Project Form -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Add New Project</h5>
+      <form action="/projects/add" method="POST">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Project Name</label>
+          <input type="text" name="project_name" class="form-control" placeholder="Enter project name" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Description</label>
+          <textarea name="description" class="form-control" rows="3" placeholder="Write a short description" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Add Project</button>
+      </form>
+    </div>
   </div>
-</div>
 
-<!-- Project List -->
-<div class="list-group">
-  {{#each projects}}
-    <a href="/projects/{{this.id}}" class="list-group-item list-group-item-action">
-      <h5>{{title}}</h5>
-      <p>{{this.description}}</p>
-    </a>
-  {{/each}}
+  <!-- Project List -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Project List</h5>
+      {{#if projects.length}}
+        <div class="list-group">
+          {{#each projects}}
+            <div class="list-group-item">
+              <h6 class="mb-1 fw-bold">{{this.project_name}}</h6>
+              <p class="mb-1">{{this.description}}</p>
+              <small class="text-muted">Created at: {{this.created_at}}</small>
+            </div>
+          {{/each}}
+        </div>
+      {{else}}
+        <p class="text-muted">No projects available yet.</p>
+      {{/if}}
+    </div>
+  </div>
 </div>
