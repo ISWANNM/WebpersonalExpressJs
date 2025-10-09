@@ -1,4 +1,34 @@
-<div class="text-center">
+{{!< layouts/main }}
+
+<div class="text-center mb-5">
   <h1>Welcome to My Personal Web</h1>
   <p class="lead">Saya masih belajar pemograman.</p>
+
+  {{!-- {{#if usersData}}
+    <p>Halo, <strong>{{usersData}}</strong>! Selamat datang kembali 👋</p>
+  {{else}}
+    <p>Silakan <a href="/login">login</a> untuk mengelola project Anda.</p>
+  {{/if}} --}}
 </div>
+
+<hr>
+
+<h3 class="mb-4 text-center">Daftar Projects</h3>
+
+{{#if projects.length}}
+  <div class="row">
+    {{#each projects}}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{this.project_name}}</h5>
+            <p class="card-text">{{this.description}}</p>
+            <small class="text-muted">Dibuat pada: {{this.created_at}}</small>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{else}}
+  <p class="text-center text-muted">Belum ada project yang ditambahkan.</p>
+{{/if}}

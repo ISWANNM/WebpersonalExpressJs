@@ -12,9 +12,23 @@
       <a class="navbar-brand" href="/">My Web</a>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/projects">Projects</a></li>
-          <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+          {{#if user}}
+            <li class="nav-item d-flex align-items-center gap-2">
+              <span class="nav-link mb-0 text-white">Hi, {{user.name}}</span>
+              <a href="/projects" class="btn btn-light btn-sm">Projects</a>
+              <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+            </li>
+          {{else}}
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Register</a>
+            </li>
+          {{/if}}
         </ul>
       </div>
     </div>
