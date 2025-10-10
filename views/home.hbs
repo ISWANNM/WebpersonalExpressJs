@@ -18,15 +18,22 @@
 {{#if projects.length}}
   <div class="row">
     {{#each projects}}
-      <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">{{this.project_name}}</h5>
-            <p class="card-text">{{this.description}}</p>
-            <small class="text-muted">Dibuat pada: {{this.created_at}}</small>
-          </div>
-        </div>
+    <div class="list-group-item d-flex align-items-start gap-3">
+      <!-- Gambar project -->
+      {{#if this.project_image}}
+      <img src="/uploads/{{this.project_image}}" alt="{{this.project_name}}" class="rounded"
+        style="width: 80px; height: 80px; object-fit: cover;">
+      {{else}}
+      <img src="/img/no-image.png" alt="No image" class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
+      {{/if}}
+    
+      <!-- Info project -->
+      <div>
+        <h6 class="mb-1 fw-bold">{{this.project_name}}</h6>
+        <p class="mb-1 text-secondary">{{this.description}}</p>
+        <small class="text-muted">Created at: {{this.created_at}}</small>
       </div>
+    </div>
     {{/each}}
   </div>
 {{else}}

@@ -12,7 +12,7 @@
       <div class="alert alert-success">{{success}}</div>
     {{/if}}
 
-    <form action="/register" method="POST">
+    <form action="/register" method="POST" enctype="multipart/form-data">
       <div class="mb-3">
         <label for="name" class="form-label">Full Name</label>
         <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" required>
@@ -31,6 +31,11 @@
       <div class="mb-3">
         <label for="confirmPassword" class="form-label">Confirm Password</label>
         <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Re-enter password" required>
+      </div> 
+      
+      <div class="mb-3">
+        <label for="profilePicture" class="form-label">Profile Picture</label>
+        <input class="form-control" type="file" id="profilePicture" name="profilePicture" placeholder="Upload Profile">
       </div>
 
       <button type="submit" class="btn btn-success w-100">Register</button>

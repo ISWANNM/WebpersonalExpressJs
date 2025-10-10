@@ -1,13 +1,13 @@
 import express from "express";
 import { engine } from "express-handlebars";
-import path from "path";
 import { fileURLToPath } from "url";
 import pool from "./config/db.js";
 import bcrypt from "bcrypt";
 import session from "express-session";
 import flash from "express-flash";
-import { title } from "process";
-import { error } from "console";
+import multer from "multer";
+import path from "path";
+
 
 function isLoggedIn(req, res, next) {
   if (!req.session.user) {
@@ -40,6 +40,18 @@ app.use(
 );
 app.use(flash());
 
+//Multer 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "public", "uploads"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+  },
+});
+
+const upload = multer ({ storage: storage});
+
 // buat user session tersedia di semua view
 app.use((req, res, next) => {
   res.locals.user = req.session.user|| null;
@@ -65,17 +77,19 @@ app.get("/projects", requireLogin, async (req, res) => {
 });
 
 // Add project (CREATE) ketika login
-app.post("/projects/add", isLoggedIn, async (req, res) => {
+app.post("/projects/add", upload.single("project_image"), async (req, res) => {
   const { project_name, description } = req.body;
+  const project_image = req.file ? req.file.filename : null;
+
   try {
     await pool.query(
-      "INSERT INTO projects (project_name, description, created_at) VALUES ($1, $2, NOW())",
-      [project_name, description]
+      "INSERT INTO projects (project_name, description, project_image, created_at) VALUES ($1, $2, $3, NOW())",
+      [project_name, description, project_image]
     );
     res.redirect("/projects");
   } catch (err) {
-    console.error(err);
-    res.send("Error inserting project: " + err.message);
+    console.error("Error inserting project:", err);
+    res.status(500).send("Database insert error");
   }
 });
 
@@ -88,7 +102,7 @@ app.get("/register", (req, res) => {
     error: req.flash("error"),
   });
 });
-app.post("/register", handleRegister);
+app.post("/register", upload.single('profilePicture'), handleRegister);
 app.get("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -167,19 +181,21 @@ function register (req, res) {
 async function handleRegister(req,res) {
   const { name, email, password } = req.body;
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const isRegistered = await pool.query("SELECT * FROM users WHERE email=$1", [email]);
-  if(isRegistered.rows.length > 0) {
-    req.flash("error", "Email sudah terdaftar!");
-    return res.redirect("/register");
-  }
-
   try {
+    const isRegistered = await pool.query("SELECT * FROM users WHERE email=$1", [email]);
+    if (isRegistered.rows.length > 0) {
+      req.flash("error", "Email sudah terdaftar!");
+      return res.redirect("/register");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const profilePicture = req.file ? req.file.filename : null;
+
     await pool.query(
-      "INSERT INTO users (name, email, password) VALUES ($1, $2, $3)",
-      [name, email, hashedPassword]
+      'INSERT INTO users (name, email, password, "profilePicture") VALUES ($1, $2, $3, $4)',
+      [name, email, hashedPassword, profilePicture]
     );
+
     req.flash("success", "Registrasi berhasil! Silakan login.");
     res.redirect("/login");
   } catch (err) {
